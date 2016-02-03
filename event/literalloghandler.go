@@ -58,22 +58,27 @@ func (h *LiteralLogHandler) Logs(args *core.LogsArgs) {
 			"Logger": "Literal",
 			"Hidden": args.Hidden,
 			"Stream": args.Stream,
-		}).Printf("%s %6s %q", shown, args.Stream, args.Logs)
+		}).Printf("%s %6s %q", shown, args.Stream, h.sanitizeLogs(args).Logs)
 	} else if h.shouldPrintLog(args) {
-		h.l.Print(h.sanitizelogs(args.Logs))
+		h.l.Print(h.sanitizeLogs(args).Logs)
 	}
 }
 
 // goes through the
 func (h *LiteralLogHandler) sanitizeLogs(args *core.LogsArgs) *core.LogsArgs {
-	env := args.Build.Env()
-	for _, str := range env.Hidden.Map {
-		args.Logs = strings.Replace(args.Logs, str, " ", -1)
-	}
+	if args.Build != nil {
+		env := args.Build.Env()
+		if env.Map != nil && env.Hidden.Map != nil {
+			for _, str := range env.Hidden.Map {
+				args.Logs = strings.Replace(args.Logs, str, "", -1)
+			}
 
-	for _, str := range env.Map {
-		args.Logs = strings.Replace(args.Logs, str, " ", -1)
+			for _, str := range env.Map {
+				args.Logs = strings.Replace(args.Logs, str, "", -1)
+			}
+		}
 	}
+	return args
 }
 
 func (h *LiteralLogHandler) shouldPrintLog(args *core.LogsArgs) bool {
