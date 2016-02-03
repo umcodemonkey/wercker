@@ -1,0 +1,10 @@
+build:
+    box:
+        id: busybox
+        cmd: /bin/sh
+    steps:
+        - script:
+            code: |
+                if [ ! -z "$SECRET" ]; then
+                    exit 1
+                fi
