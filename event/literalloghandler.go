@@ -72,10 +72,6 @@ func (h *LiteralLogHandler) sanitizeLogs(args *core.LogsArgs) *core.LogsArgs {
 			for _, str := range env.Hidden.Map {
 				args.Logs = strings.Replace(args.Logs, str, "", -1)
 			}
-
-			for _, str := range env.Map {
-				args.Logs = strings.Replace(args.Logs, str, "", -1)
-			}
 		}
 	}
 	return args

@@ -5,6 +5,7 @@ build:
     steps:
         - script:
             code: |
+                echo "$SECRET"
                 if [ ! -z "$SECRET" ]; then
                     exit 1
                 fi
