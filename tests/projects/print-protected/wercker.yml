@@ -5,7 +5,7 @@ build:
     steps:
         - script:
             code: |
-                echo "$SECRET"
-                if [ ! -z "$SECRET" ]; then
+                echo -n "$SECRET"
+                if [ "$SECRET" != "HIDDEN" ]; then
                     exit 1
                 fi

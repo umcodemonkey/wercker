@@ -15,8 +15,6 @@
 package event
 
 import (
-	"strings"
-
 	log "github.com/Sirupsen/logrus"
 	"github.com/wercker/reporter-client"
 	"github.com/wercker/wercker/core"
@@ -58,23 +56,10 @@ func (h *LiteralLogHandler) Logs(args *core.LogsArgs) {
 			"Logger": "Literal",
 			"Hidden": args.Hidden,
 			"Stream": args.Stream,
-		}).Printf("%s %6s %q", shown, args.Stream, h.sanitizeLogs(args).Logs)
+		}).Printf("%s %6s %q", shown, args.Stream, args.Logs)
 	} else if h.shouldPrintLog(args) {
-		h.l.Print(h.sanitizeLogs(args).Logs)
+		h.l.Print(args.Logs)
 	}
-}
-
-// goes through the
-func (h *LiteralLogHandler) sanitizeLogs(args *core.LogsArgs) *core.LogsArgs {
-	if args.Build != nil {
-		env := args.Build.Env()
-		if env.Hidden.Map != nil {
-			for _, str := range env.Hidden.Map {
-				args.Logs = strings.Replace(args.Logs, str, "", -1)
-			}
-		}
-	}
-	return args
 }
 
 func (h *LiteralLogHandler) shouldPrintLog(args *core.LogsArgs) bool {
