@@ -39,10 +39,25 @@ testDirectMount() {
   $wercker build $testDir --direct-mount --working-dir $workingDir > $logFile
   contents=$(cat ${testFile})
   if [ "$contents" == 'world' ]
-      then echo "passed"
+      then echo -n "passed"
       return 0
   else
-      echo 'failed'
+      echo -n 'failed'
+      cat $logFile
+      return 1
+  fi
+}
+
+testPrintProtected() {
+  echo -n "testing protected..."
+  testDir=$testsDir/print-protected
+  logFile="${workingDir}/print-protected.log"
+  $wercker --environment ${testDir}/ENVIRONMENT build $testDir > $logFile && grep -q "HIDDEN" $logFile
+  if [ $? ]; then
+      echo -n "passed"
+      return 0
+  else
+      echo -n 'failed'
       cat $logFile
       return 1
   fi
@@ -50,11 +65,12 @@ testDirectMount() {
 
 
 runTests() {
-  basicTest "source-path" build $testsDir/source-path || return 1
-  basicTest "test local services" build $testsDir/local-service/service-consumer || return 1
-  basicTest "test deploy" deploy $testsDir/deploy-no-targets || return 1
-  basicTest "test deploy target" deploy --deploy-target test $testsDir/deploy-targets || return 1
-  testDirectMount || return 1
+ basicTest "source-path" build $testsDir/source-path || return 1
+ basicTest "test local services" build $testsDir/local-service/service-consumer || return 1
+ basicTest "test deploy" deploy $testsDir/deploy-no-targets || return 1
+ basicTest "test deploy target" deploy --deploy-target test $testsDir/deploy-targets || return 1
+ testDirectMount || return 1
+ testPrintProtected || return 1
 }
 
 runTests
