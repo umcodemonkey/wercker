@@ -236,7 +236,6 @@ func (p *Runner) GetConfig() (*core.Config, string, error) {
 	if rawConfig.SourceDir != "" {
 		p.options.SourceDir = rawConfig.SourceDir
 	}
-
 	MaxCommandTimeout := 60    // minutes
 	MaxNoResponseTimeout := 60 // minutes
 

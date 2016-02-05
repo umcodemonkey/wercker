@@ -20,7 +20,6 @@ import (
 	"io/ioutil"
 	"net/url"
 	"os"
-	"path/filepath"
 	"strings"
 
 	"github.com/fsouza/go-dockerclient"
@@ -98,10 +97,7 @@ func NewDockerBox(boxConfig *core.BoxConfig, options *core.PipelineOptions, dock
 	if err != nil {
 		return nil, err
 	}
-	faiqGopath, e := filepath.Abs("/Users/faiq")
-	if e != nil {
-		panic(e)
-	}
+	vols := boxConfig.Volumes
 	return &DockerBox{
 		Name:            name,
 		ShortName:       shortName,
@@ -115,7 +111,7 @@ func NewDockerBox(boxConfig *core.BoxConfig, options *core.PipelineOptions, dock
 		logger:          logger,
 		cmd:             cmd,
 		entrypoint:      entrypoint,
-		volumes:         []string{"/var/run/docker.sock", faiqGopath},
+		volumes:         vols,
 	}, nil
 }
 

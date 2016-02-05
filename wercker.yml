@@ -1,4 +1,6 @@
-box: tcnksm/gox:1.5.1
+box:
+  id: tcnksm/gox:1.5.1
+  volumes: ["/var/run/docker.sock", "/Users/faiq/go/src/github.com/wercker"]
 dev:
   box:
     id: busybox
