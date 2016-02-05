@@ -175,17 +175,16 @@ test:
                   -arch="amd64"\
                   -output "$WERCKER_OUTPUT_DIR/latest/{{.OS}}_{{.Arch}}/wercker"
         - script:
-            name: prepare
             code: |
                 export lol=/Users/faiq/go/src/github.com/wercker/wercker
+                cp $WERCKER_OUTPUT_DIR/latest/linux_amd64/wercker $lol
                 cd $lol
-                $WERCKER_OUTPUT_DIR/latest/linux_amd64/./wercker b --build-id $WERCKER_BUILD_ID-1 --pipeline yo
+                $WERCKER_OUTPUT_DIR/latest/linux_amd64/./wercker b --build-id $WERCKER_BUILD_ID-1 --pipeline run-tests
 
-yo:
-    box:
-      id: alpine
-      cmd: /bin/sh
+run-tests:
     steps:
         - script:
             code: |
-                echo 'yo'
+                unset WERCKER_BUILD_ID
+                cd /Users/faiq/go/src/github.com/wercker/wercker
+                ./test-all.sh
