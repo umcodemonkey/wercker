@@ -131,5 +131,5 @@ func (s *ShellStep) ReportPath(...string) string {
 
 // ShouldSyncEnv before running this step = TRUE
 func (s *ShellStep) ShouldSyncEnv() bool {
-	return false
+	return true
 }
