@@ -97,16 +97,6 @@ func NewDockerBox(boxConfig *core.BoxConfig, options *core.PipelineOptions, dock
 	if err != nil {
 		return nil, err
 	}
-	var interpolatedVols []string
-	if options.EnableVolumes {
-		vols := util.SplitSpaceOrComma(boxConfig.Volumes)
-		env := options.HostEnv
-		interpolatedVols = make([]string, len(vols))
-		for i, vol := range vols {
-			interpolatedVols[i] = env.Interpolate(vol)
-		}
-	}
-
 	return &DockerBox{
 		Name:            name,
 		ShortName:       shortName,
@@ -120,7 +110,7 @@ func NewDockerBox(boxConfig *core.BoxConfig, options *core.PipelineOptions, dock
 		logger:          logger,
 		cmd:             cmd,
 		entrypoint:      entrypoint,
-		volumes:         interpolatedVols,
+		volumes:         []string{},
 	}, nil
 }
 
@@ -179,6 +169,18 @@ func (b *DockerBox) binds() ([]string, error) {
 			// volumes[b.options.MntPath(entry.Name())] = struct{}{}
 		}
 	}
+
+	if b.options.EnableVolumes {
+		vols := util.SplitSpaceOrComma(b.config.Volumes)
+		env := b.options.HostEnv
+		interpolatedVols := make([]string, len(vols))
+		for i, vol := range vols {
+			interpolatedVols[i] = env.Interpolate(vol)
+			fmt.Printf("%v %v \n", vol, env.Interpolate(vol))
+		}
+		b.volumes = interpolatedVols
+	}
+
 	for _, volume := range b.volumes {
 		binds = append(binds, fmt.Sprintf("%s:%s:rw", volume, volume))
 	}

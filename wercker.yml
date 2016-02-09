@@ -1,6 +1,6 @@
 box:
   id: tcnksm/gox:1.5.1
-  volumes: ["/var/run/docker.sock", "/Users/faiq/go/src/github.com/wercker"]
+  volumes: $CODE_PATH
 dev:
   box:
     id: busybox
@@ -178,15 +178,14 @@ test:
                   -output "$WERCKER_OUTPUT_DIR/latest/{{.OS}}_{{.Arch}}/wercker"
         - script:
             code: |
-                export lol=/Users/faiq/go/src/github.com/wercker/wercker
-                cp $WERCKER_OUTPUT_DIR/latest/linux_amd64/wercker $lol
-                cd $lol
-                $WERCKER_OUTPUT_DIR/latest/linux_amd64/./wercker b --build-id $WERCKER_BUILD_ID-1 --pipeline run-tests
+                cp $WERCKER_OUTPUT_DIR/latest/linux_amd64/wercker $CODE_PATH
+                cd $CODE_PATH
+                $WERCKER_OUTPUT_DIR/latest/linux_amd64/./wercker b --build-id $WERCKER_BUILD_ID-1 --pipeline run-tests --enable-volumes
 
 run-tests:
     steps:
         - script:
             code: |
                 unset WERCKER_BUILD_ID
-                cd /Users/faiq/go/src/github.com/wercker/wercker
+                cd $CODE_PATH 
                 ./test-all.sh
