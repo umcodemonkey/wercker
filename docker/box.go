@@ -146,7 +146,7 @@ func (b *DockerBox) GetID() string {
 	return ""
 }
 
-func (b *DockerBox) binds() ([]string, error) {
+func (b *DockerBox) binds(env *util.Environment) ([]string, error) {
 	binds := []string{}
 	// Make our list of binds for the Docker attach
 	// NOTE(termie): we don't appear to need the "volumes" stuff, leaving
@@ -172,11 +172,9 @@ func (b *DockerBox) binds() ([]string, error) {
 
 	if b.options.EnableVolumes {
 		vols := util.SplitSpaceOrComma(b.config.Volumes)
-		env := b.options.HostEnv
-		interpolatedVols := make([]string, len(vols))
-		for i, vol := range vols {
-			interpolatedVols[i] = env.Interpolate(vol)
-			fmt.Printf("%v %v \n", vol, env.Interpolate(vol))
+		var interpolatedVols []string
+		for _, vol := range vols {
+			interpolatedVols = append(interpolatedVols, env.Interpolate(vol))
 		}
 		b.volumes = interpolatedVols
 	}
@@ -372,7 +370,7 @@ func (b *DockerBox) Run(ctx context.Context, env *util.Environment) (*docker.Con
 
 	b.logger.Debugln("Docker Container:", container.ID)
 
-	binds, err := b.binds()
+	binds, err := b.binds(env)
 
 	if err != nil {
 		return nil, err

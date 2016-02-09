@@ -1,6 +1,6 @@
 box:
   id: tcnksm/gox:1.5.1
-  volumes: $CODE_PATH
+  volumes: $CODE_PATH /var/run/docker.sock
 dev:
   box:
     id: busybox
