@@ -97,7 +97,16 @@ func NewDockerBox(boxConfig *core.BoxConfig, options *core.PipelineOptions, dock
 	if err != nil {
 		return nil, err
 	}
-	vols := boxConfig.Volumes
+	var interpolatedVols []string
+	if options.localVolumes {
+		vols := util.SplitSpaceOrComma(boxConfig.Volumes)
+		env := options.HostEnv
+		interpolatedVols = make([]string, len(vols))
+		for i, vol := range vols {
+			interpolatedVols[i] = env.Interpolate(vol)
+		}
+	}
+
 	return &DockerBox{
 		Name:            name,
 		ShortName:       shortName,
@@ -111,7 +120,7 @@ func NewDockerBox(boxConfig *core.BoxConfig, options *core.PipelineOptions, dock
 		logger:          logger,
 		cmd:             cmd,
 		entrypoint:      entrypoint,
-		volumes:         vols,
+		volumes:         interpolatedVols,
 	}, nil
 }
 

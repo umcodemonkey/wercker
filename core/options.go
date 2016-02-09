@@ -359,6 +359,7 @@ type PipelineOptions struct {
 	DirectMount    bool
 	EnableDevSteps bool
 	PublishPorts   []string
+	localVolumes   bool
 	WerckerYml     string
 }
 
@@ -562,6 +563,7 @@ func NewPipelineOptions(c util.Settings, e *util.Environment) (*PipelineOptions,
 	directMount, _ := c.Bool("direct-mount")
 	enableDevSteps, _ := c.Bool("enable-dev-steps")
 	publishPorts, _ := c.StringSlice("publish")
+	localVolumes, _ := c.Bool("local-volumes")
 	werckerYml, _ := c.String("wercker-yml")
 
 	return &PipelineOptions{

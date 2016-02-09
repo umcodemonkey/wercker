@@ -42,7 +42,7 @@ type BoxConfig struct {
 	Registry   string
 	Entrypoint string
 	URL        string
-	Volumes    []string
+	Volumes    string
 }
 
 // IsExternal tells us if the box (service) is located on disk
