@@ -98,7 +98,7 @@ func NewDockerBox(boxConfig *core.BoxConfig, options *core.PipelineOptions, dock
 		return nil, err
 	}
 	var interpolatedVols []string
-	if options.localVolumes {
+	if options.EnableVolumes {
 		vols := util.SplitSpaceOrComma(boxConfig.Volumes)
 		env := options.HostEnv
 		interpolatedVols = make([]string, len(vols))
