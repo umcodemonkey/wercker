@@ -1,4 +1,4 @@
 vendor
-wercker
+wercker*
 .wercker
 .DS_STORE

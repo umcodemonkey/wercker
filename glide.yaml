@@ -44,6 +44,9 @@ import:
   - package: golang.org/x/sys/unix
   - package: github.com/mreiferson/go-snappystream
   - package: github.com/wercker/journalhook
+    os:
+      - darwin
+      - linux
   - package: github.com/jtacoma/uritemplates
   - package: github.com/CenturyLinkLabs/docker-reg-client
     ref:     0bb0ba20bf1a05629226c2da0fdf7a37b9f661ba
@@ -58,5 +61,8 @@ import:
   # explicitly define it :-/
   - package: github.com/vaughan0/go-ini
   - package: github.com/coreos/go-systemd
+    os:
+      - darwin
+      - linux
     ref: d08b1d0cf9e96bf287b33d3a2c55132e185b273b
     vcs: git
